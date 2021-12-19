@@ -114,6 +114,7 @@
                 document.querySelector(".hp").style.width = `100%`;
                 setInterval(timeCoin);
                 isStart = true;
+                isKeydown = false;//避免開始時滑走
                 createjs.Ticker.addEventListener("tick", tickFn);
                 window.addEventListener("keydown", keydownMoveFn);
                 window.addEventListener("keyup", keyupMoveFn);
@@ -245,15 +246,16 @@
                 // 沒血時
                 if (HP <= 0) {
                     isStart = false;
+                    isKeydown = true;//不知為什麼他要true的時候才會爆炸，false時只會站著
                     createjs.Ticker.removeEventListener("tick", tickFn);
                     window.removeEventListener("keydown", keydownMoveFn);
                     window.removeEventListener("keyup", keyupMoveFn);
                     window.removeEventListener("keydown", flykeydownMoveFn);
                     window.removeEventListener("keyup", flykeyupMoveFn);
-                    Mario.gotoAndPlay("del");
                     document.querySelector(".over").style.display = "flex";
                     boomAudio = createjs.Sound.play("boom");
                     boomAudio.volume = 0.05;
+                    Mario.gotoAndPlay("del");
                     if (document.querySelector(".bestscore").innerHTML < score) {
                         document.querySelector(".bestscore").innerHTML = score;
                     }
