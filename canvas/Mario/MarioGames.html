@@ -72,10 +72,10 @@
             var loadint = 0;
             var sounds = [
 
-                { src: "/test/mp3/fall in the dark.mp3", id: "bg" },
-                { src: "/test/mp3/boom.mp3", id: "boom" },
-                { src: "/test/mp3/coin.mp3", id: "coin" },
-                { src: "/test/mp3/play.mp3", id: "play" },
+                { src: "./test/mp3/fall in the dark.mp3", id: "bg" },
+                { src: "./test/mp3/boom.mp3", id: "boom" },
+                { src: "./test/mp3/coin.mp3", id: "coin" },
+                { src: "./test/mp3/play.mp3", id: "play" },
             ];
             createjs.Sound.alternateExtensions = ["mp3"];
             createjs.Sound.addEventListener("fileload", (e) => {
@@ -313,7 +313,7 @@
                 <a class="gamePlaybtn"><img src="/test/canvas/Mario/play.png" alt=""></a>
                 <div class="over">
                     <div class="overbox">
-                        <img src="/canvas/Mario/gameover.png" alt="">
+                        <img src="/test/canvas/Mario/gameover.png" alt="">
                         <a class="replay"><img src="/test/canvas/Mario/play.png" alt=""></a>
 
                     </div>
