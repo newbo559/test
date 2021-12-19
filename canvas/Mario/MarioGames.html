@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarioGames</title>
+    <link rel="stylesheet" href="/canvas/Mario/scss/Mario.css">
+    <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
+    <script src="Mariogame.js?1638804011771"></script>
+    <script src="/canvas/Mario/Mariogame.js"></script>
+    <script src="/Collision/Collision.js"></script>
+    <script>
+
+        window.onload = function () {
+            init();
+        }
+
+        var canvas, stage, exportRoot, anim_container, dom_overlay_container, fnStartAnimation;
+        function init() {
+            canvas = document.getElementById("canvas");
+            anim_container = document.getElementById("animation_container");
+            dom_overlay_container = document.getElementById("dom_overlay_container");
+            var comp = AdobeAn.getComposition("ECAC3827700BB64CBB03E158EBFFE5D8");
+            var lib = comp.getLibrary();
+            var loader = new createjs.LoadQueue(false);
+            loader.addEventListener("fileload", function (evt) { handleFileLoad(evt, comp) });
+            loader.addEventListener("complete", function (evt) { handleComplete(evt, comp) });
+            var lib = comp.getLibrary();
+            loader.loadManifest(lib.properties.manifest);
+        }
+        function handleFileLoad(evt, comp) {
+            var images = comp.getImages();
+            if (evt && (evt.item.type == "image")) { images[evt.item.id] = evt.result; }
+        }
+        function handleComplete(evt, comp) {
+            //This function is always called, irrespective of the content. You can use the variable "stage" after it is created in token create_stage.
+            var lib = comp.getLibrary();
+            var ss = comp.getSpriteSheet();
+            var queue = evt.target;
+            var ssMetadata = lib.ssMetadata;
+            for (i = 0; i < ssMetadata.length; i++) {
+                ss[ssMetadata[i].name] = new createjs.SpriteSheet({ "images": [queue.getResult(ssMetadata[i].name)], "frames": ssMetadata[i].frames })
+            }
+            exportRoot = new lib.Mariogame();
+            stage = new lib.Stage(canvas);
+            // start programing---------------------------------------
+
+            var footer = new lib.footer();
+            footer.y = 350;
+            footer.x = 0;
+            exportRoot.addChild(footer);
+
+            // var bestscore = document.querySelector(".bestscore").innerHTML;
+            var difficulty = 2;
+            var HP = 100;
+            let isStart = false;
+            let isKeydown = false;
+            let isFlyKeydown = false;
+            const attack = 5;
+            var score = 0;
+            const speedY = 5;
+            const speedX = 10;
+            let position = 1;
+            var Mario = new lib.MarioUser();
+            Mario.x = 333;
+            Mario.y = 350;
+            exportRoot.addChild(Mario);
+
+            // music
+            var loadint = 0;
+            var sounds = [
+
+                { src: "./mp3/fall in the dark.mp3", id: "bg" },
+                { src: "./mp3/boom.mp3", id: "boom" },
+                { src: "./mp3/coin.mp3", id: "coin" },
+                { src: "./mp3/play.mp3", id: "play" },
+            ];
+            createjs.Sound.alternateExtensions = ["mp3"];
+            createjs.Sound.addEventListener("fileload", (e) => {
+                loadint++;
+                if (loadint === sounds.length) {
+                    document.querySelector(".loading").style.display = "none";//撤loading
+                    bgAudio = createjs.Sound.play("bg", { loop: -1 });
+                    bgAudio.volume = 0.1;
+                }
+            }
+            );
+            createjs.Sound.registerSounds(sounds, "/");
+
+
+            // 遊戲開始按鈕
+            document.querySelector(".gamePlaybtn").addEventListener("click", () => {
+                isStart = true;
+                document.querySelector(".gamePlaybtn").style.display = "none";
+                window.addEventListener("keydown", keydownMoveFn);
+                window.addEventListener("keyup", keyupMoveFn);
+                window.addEventListener("keydown", flykeydownMoveFn);
+                window.addEventListener("keyup", flykeyupMoveFn);
+                playAudio = createjs.Sound.play("play");
+                playAudio.volume = 0.1;
+            })
+
+            // 遊戲重新開始
+            document.querySelector(".replay").addEventListener("click", () => {
+                // window.location.reload();
+                score = 0;
+                Droptime = 1200;
+                document.querySelector(".score").innerHTML = 0;
+                Mario.x = 333;
+                Mario.y = 350;
+                HP = 100;
+                document.querySelector(".hp").style.width = `100%`;
+                setInterval(timeCoin);
+                isStart = true;
+                createjs.Ticker.addEventListener("tick", tickFn);
+                window.addEventListener("keydown", keydownMoveFn);
+                window.addEventListener("keyup", keyupMoveFn);
+                window.addEventListener("keydown", flykeydownMoveFn);
+                window.addEventListener("keyup", flykeyupMoveFn);
+                Mario.gotoAndPlay("stop");
+                document.querySelector(".over").style.display = "none";
+            })            
+            // Coin
+            var CoinRebirth = 100;
+            var Timereduce = 3;
+            let Droptime = 1200;
+            let timeCoin = setInterval(() => {
+                if (isStart == false) return;
+                let Coin = new lib.Coin();
+                
+                if (difficulty == 1) {
+                    Coin = new lib.Knife();
+                }
+                if (difficulty == 3) {
+                    Coin = new lib.Dcsword();
+                }
+                if (difficulty == 4) {
+                    Coin = new lib.MarioUser();
+                }
+                Coin.x = Math.floor(Math.random() * (670 - 30 + 1) + 10); //隨機範圍： 亂數 * (最大值 - 最小值 +1 ) + 最小值
+                Coin.y = -120;
+                exportRoot.addChildAt(Coin, 1);//eaclejs 將floor 階層推為2， Coin設為 1，背景為0
+                
+                createjs.Tween.get(Coin)
+                .to({ y: 350 }, Droptime)
+                .call(() => {
+                    exportRoot.removeChild(Coin);
+                    console.log("no catch coin");
+                    score++; if (Droptime >= 700) {
+                        Droptime = Droptime - Timereduce;
+                    } else {
+                        Droptime = (Droptime - 200 / score).toFixed(2);
+                    }
+                    document.querySelector(".score").innerHTML = score;
+                    document.querySelector(".droptime").innerHTML = `${Droptime}ms`;
+                    
+                    // HP -= attack;
+                    // document.querySelector(".hp").style.width = `${HP}%`;
+                })
+                
+                .addEventListener("change", () => {
+                    // var hit = ndgmr.checkPixelCollision(Coin,Mario);
+                    var hit = ndgmr.checkRectCollision(Coin, Mario);//ture or false
+                    if (hit) {
+                        createjs.Tween.removeTweens(Coin); //removeTweenjs
+                        exportRoot.removeChild(Coin);
+                        score -= 10;
+                        document.querySelector(".score").innerHTML = score;
+                        HP -= attack;
+                        document.querySelector(".hp").style.width = `${HP}%`;
+                        coinAudio = createjs.Sound.play("coin");
+                        coinAudio.volume = 0.1;
+                    }
+                    
+                })
+            }, CoinRebirth);
+            
+            //change difficulty 
+            var easy = document.querySelector(".easy").addEventListener("click", () => {
+                console.log("click");
+                difficulty = 1;
+            })
+            var medium = document.querySelector(".medium").addEventListener("click", () => {
+                console.log("click");
+                difficulty = 2;
+            })
+            var hard = document.querySelector(".hard").addEventListener("click", () => {
+                console.log("click");
+                difficulty = 3;
+            })
+            var special = document.querySelector(".special").addEventListener("click", () => {
+                console.log("click");
+                difficulty = 4;
+            })
+            
+            // 32 empty  
+            // 37 Left 
+            // 38 up
+            // 39 Right
+            // 40 down
+            function keydownMoveFn(e) {
+                if (isKeydown === true) return; //避免Mario影格停在同一格
+                if (e.keyCode === 37 || e.keyCode === 39) {
+                    isKeydown = true;
+                    position = e.keyCode === 39 ? 1 : -1;//If the keyCode is 39, the position is 1, else it is -1.
+                    Mario.gotoAndPlay("run");
+                }
+
+            }
+            function keyupMoveFn(e) {
+                isKeydown = false;
+                console.log("stop");
+                Mario.gotoAndPlay("stop");
+            }
+            function flykeydownMoveFn(e) {
+                if (isFlyKeydown === true) return;
+                if (e.keyCode === 38 || e.keyCode === 40) {
+                    isFlyKeydown = true;
+                    console.log("run");
+                    positionY = e.keyCode === 38 ? 1 : -1;
+                    Mario.gotoAndPlay("run");
+                }
+            }
+            function flykeyupMoveFn(e) {
+                isFlyKeydown = false;
+                Mario.gotoAndPlay("stop");
+            }
+            // function keydownFn(e){
+            //     console.log(e.keyCode);
+            //     isKeydown = true;
+            // }
+            // Solve the pause when moveing, repeat function.
+            // 解決移動時的停頓，重複執行函式
+            createjs.Ticker.addEventListener("tick", tickFn);
+            function tickFn() {
+                if (Mario.x > 700 || Mario.x < 0) {
+                    HP -= 1;
+                    document.querySelector(".hp").style.width = `${HP}%`;
+                }
+
+
+
+                // 沒血時
+                if (HP <= 0) {
+                    isStart = false;
+                    createjs.Ticker.removeEventListener("tick", tickFn);
+                    window.removeEventListener("keydown", keydownMoveFn);
+                    window.removeEventListener("keyup", keyupMoveFn);
+                    window.removeEventListener("keydown", flykeydownMoveFn);
+                    window.removeEventListener("keyup", flykeyupMoveFn);
+                    Mario.gotoAndPlay("del");
+                    document.querySelector(".over").style.display = "flex";
+                    boomAudio = createjs.Sound.play("boom");
+                    boomAudio.volume = 0.05;
+                    if (document.querySelector(".bestscore").innerHTML < score) {
+                        document.querySelector(".bestscore").innerHTML = score;
+                    }
+                }
+                if (isFlyKeydown == true) {
+                    Mario.y -= speedY * positionY;
+                    console.log("fly");
+                }
+
+                if (isKeydown == true) {
+                    Mario.x += speedX * position;
+                    Mario.scaleX = position;//If the scaleX is -1, can be regarded as reverse action Mario.
+                } else {
+                    Mario.gotoAndPlay("stop");
+                }
+
+            }
+
+
+            //Registers the "tick" event listener.
+            fnStartAnimation = function () {
+                stage.addChild(exportRoot);
+                createjs.Ticker.framerate = lib.properties.fps;
+                createjs.Ticker.addEventListener("tick", stage);
+            }
+
+            //Code to support hidpi screens and responsive scaling.
+            AdobeAn.makeResponsive(false, 'both', false, 1, [canvas, anim_container, dom_overlay_container]);
+            AdobeAn.compositionLoaded(lib.properties.id);
+            fnStartAnimation();
+
+        }
+    </script>
+</head>
+
+<body>
+
+
+    <div class="container">
+        <div class="box1">
+            <h1>Your Best Score:<div class="bestscore">0</div>
+            </h1>
+
+        </div>
+        <div class="box2">
+            <div id="app">
+                <div class="loading"></div>
+                <h1 class="score">0</h1>
+                <h1 class="droptime">1200ms</h1>
+                <div class="hpbar">
+                    <h2>HP</h2>
+                    <div class="hpbox">
+                        <div class="hp"></div>
+                    </div>
+                </div>
+
+                <a class="gamePlaybtn"><img src="/canvas/Mario/play.png" alt=""></a>
+                <div class="over">
+                    <div class="overbox">
+                        <img src="/canvas/Mario/gameover.png" alt="">
+                        <a class="replay"><img src="/canvas/Mario/play.png" alt=""></a>
+
+                    </div>
+                </div>
+
+
+                <div id="animation_container"
+                    style="background-color:rgba(204, 204, 204, 1.00); width:700px; height:400px">
+                    <canvas id="canvas" width="700" height="400"
+                        style="position: absolute; display: block; background-color:rgba(204, 204, 204, 1.00);"></canvas>
+                    <div id="dom_overlay_container"
+                        style="pointer-events:none; overflow:hidden; width:700px; height:400px; position: absolute; left: 0px; top: 0px; display: block;">
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="box3">
+            <h1>Difficulty:
+                <ul>
+                    <li>
+                        <div class="easy">easy</div>
+                    </li>
+                    <li>
+                        <div class="medium">medium</div>
+                    </li>
+                    <li>
+                        <div class="hard">hard</div>
+                    </li>
+                    <li>
+                        <div class="special">special</div>
+                    </li>
+                </ul>
+            </h1>
+        </div>
+    </div>
+    <div class="footer">copyright &copy; Mike Cheng and NyoBe 2021 </div>
+</body>
+
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas beta</title>
+    <style>
+    *{
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .box1{
+        width: 900px;
+        height: 600px;
+        background-color: rgb(168, 125, 84);
+    }
+    .box2{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+    }
+
+</style>
+<script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
+<script src="flybird.js?1638634503004"></script>
+    <script src="/canvas/flybird/flybird.js"></script>
+    <script>
+        
+window.onload = function(){
+    init();
+}
+var canvas, stage, exportRoot, anim_container, dom_overlay_container, fnStartAnimation;
+function init() {
+	canvas = document.getElementById("canvas");
+	anim_container = document.getElementById("animation_container");
+	dom_overlay_container = document.getElementById("dom_overlay_container");
+	var comp=AdobeAn.getComposition("FB7D4D1AD1A8B644BDB62BD2B8268B0C");
+	var lib=comp.getLibrary();
+	var loader = new createjs.LoadQueue(false);
+	loader.addEventListener("fileload", function(evt){handleFileLoad(evt,comp)});
+	loader.addEventListener("complete", function(evt){handleComplete(evt,comp)});
+	var lib=comp.getLibrary();
+	loader.loadManifest(lib.properties.manifest);
+}
+function handleFileLoad(evt, comp) {
+	var images=comp.getImages();	
+	if (evt && (evt.item.type == "image")) { images[evt.item.id] = evt.result; }	
+}
+function handleComplete(evt,comp) {
+	//This function is always called, irrespective of the content. You can use the variable "stage" after it is created in token create_stage.
+	var lib=comp.getLibrary();
+	var ss=comp.getSpriteSheet();
+	var queue = evt.target;
+	var ssMetadata = lib.ssMetadata;
+	for(i=0; i<ssMetadata.length; i++) {
+		ss[ssMetadata[i].name] = new createjs.SpriteSheet( {"images": [queue.getResult(ssMetadata[i].name)], "frames": ssMetadata[i].frames} )
+	}
+	exportRoot = new lib.flybird();
+	stage = new lib.Stage(canvas);	
+
+    var btn = exportRoot.car;
+    var bird = exportRoot.birdlife;
+    var wall = exportRoot.wall;
+    var ball = exportRoot.ball;
+    var speed = 55;
+    var speed2 = 0;
+    btn.addEventListener("click",()=>{
+        speed2 += 20;
+        bird.x += speed;
+        if(bird.x >= wall.x){
+            bird.gotoAndPlay("boom");
+            setTimeout(()=>{
+            bird.x = 120;
+            bird.y = 159;
+                },800)
+        }
+
+    createjs.Tween.get(ball)
+    .to({y:100}, 100)
+    .to({x:200}, 100)
+    .to({y:300}, 100)
+    .to({x:400}, 100)
+    .call(handleComplete);
+
+    function handleComplete() {
+        console.log("The end!");
+                                }
+    })
+
+
+	//Registers the "tick" event listener.
+	fnStartAnimation = function() {
+		stage.addChild(exportRoot);
+		createjs.Ticker.framerate = lib.properties.fps;
+		createjs.Ticker.addEventListener("tick", stage);
+	}	    
+	//Code to support hidpi screens and responsive scaling.
+	AdobeAn.makeResponsive(false,'both',false,1,[canvas,anim_container,dom_overlay_container]);	
+	AdobeAn.compositionLoaded(lib.properties.id);
+	fnStartAnimation();
+}
+
+
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="box1">
+            <div class="box2" >   
+                <div id="animation_container" style="background-color:rgba(204, 204, 204, 1.00); width:550px; height:400px">
+                    <canvas id="canvas" width="550" height="400" style="position: absolute; display: block; background-color:rgba(204, 204, 204, 1.00);"></canvas>
+                    <div id="dom_overlay_container" style="pointer-events:none; overflow:hidden; width:550px; height:400px; position: absolute; left: 0px; top: 0px; display: block;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

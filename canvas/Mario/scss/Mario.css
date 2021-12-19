@@ -1,0 +1,217 @@
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: sans-serif;
+  box-sizing: border-box;
+}
+
+.container {
+  height: 100%;
+  width: 100%;
+  background-color: blanchedalmond;
+  padding: 75px 0px 80px 0px;
+  display: flex;
+}
+
+.box1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 400px;
+  width: 300px;
+  background: linear-gradient(-225deg, rgb(190, 219, 22) 80px, rgb(148, 0, 0) 80px);
+}
+.box1 h1{
+  position: relative;
+  top: 25%;
+  color: #77777769;
+  text-shadow: 1px 1px 0px rgb(255, 255, 255);
+  text-align: center;
+}
+.bestscore{
+position: relative;
+font-size: 30px;
+color: rgba(230, 230, 230, 0.37);
+text-align: center;
+top: 20px;
+background: rgba(250, 163, 136, 0.801);
+border:2px solid rgb(241, 241, 241);
+border-radius: 50px;
+transition: 0.2s;
+}
+.bestscore:hover{
+  background: rgb(75, 68, 68);
+}
+
+#app {
+  width: 700px;
+  height: 400px;
+  position: relative;
+  display: flex;
+}
+
+#app > h1.score {
+  top: 10px;
+  left: 30px;
+  position: absolute;
+  font-size: 30px;
+  z-index: 10;
+}
+
+#app > h1.droptime {
+  top: 10px;
+  left: 300px;
+  position: absolute;
+  font-size: 30px;
+  z-index: 10;
+}
+
+.hpbar {
+  position: absolute;
+  width: 160px;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+}
+
+.hpbar h2 {
+  color: rgb(2, 2, 2);
+  text-shadow: 1px 1px 0px rgb(238, 27, 27,0.4) ;
+  font-size: 23px;
+  float: left;
+}
+
+.hpbar .hpbox {
+  width: 120px;
+  background: #ff0000;
+  height: 15px;
+  float: right;
+  border: 4px  solid #111;
+  border-radius: 20px;
+}
+.hpbar .hpbox .hp{
+  border-radius: 20px;
+width: 100%;
+height: 100%;
+background: rgb(169, 255, 9);
+}
+
+.over{
+display:none;
+flex-direction: column;
+position: absolute;
+z-index: 10;
+width: 100%;
+height: 100%;
+justify-content:center;
+align-items: center;
+}
+
+.over .overbox{
+  width: 371px;  
+}
+
+.replay{
+  display: block;
+  cursor: pointer;
+  width: 130px;
+  margin: 20px auto 0 auto ;
+}
+.replay img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.gamePlaybtn{
+  cursor: pointer;
+  position: absolute;
+  z-index: 10;
+  width: 180px;
+  height: 51px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50% , -50%);
+}
+
+.loading{
+  position: absolute;
+  z-index: 20;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(26, 26, 26,0.8);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer{
+  width: 100%;
+  font-size: 12px;
+  background: rgb(2, 17, 46);
+  color: white;
+  text-align: center;
+  padding: 4px 0px;
+}
+
+.box3{
+  background: rgb(71, 6, 6);
+  height: 400px;
+  width: 300px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.box3 h1{
+  position: relative;
+  top: 25%;
+  color: #77777769;
+  text-shadow: 1px 1px 0px rgb(255, 255, 255);
+  text-align: center;
+}
+.box3  li{
+  height: 50px;
+  width: 200px;
+  text-transform: uppercase;
+  text-align: center;
+  z-index: 100;
+  margin: 5px auto 5px auto;
+}
+li .easy , li .medium,li .hard,li .special{
+  position: relative;
+  border: 3px solid rgb(236, 151, 122);
+  border-radius: 30px;
+  background: rgb(255, 48, 128);
+  transition: 0.15s;
+}
+li .easy:hover , li .medium:hover,li .hard:hover, li .special:hover{
+  background: rgb(15, 16, 20);
+  color: rgb(255, 255, 137,0.2);
+}
+
+/* #animation_container:focus,#canvas:focus{
+  box-shadow: 10px 10px 2px rgb(17, 17, 17);
+} */
+ @media screen and (max-width:769px) { 
+
+  .container{
+    flex-direction: column;
+  }
+  .box1{
+    flex-direction: column;
+    width: 700px;
+    height: 150px;
+  }
+  .box3{
+    width: 100%;
+    height: 250px;
+    top: 0;
+  }
+  .box3 h1{
+    top: 10%;
+  }
+
+}
+/*# sourceMappingURL=Mario.css.map */
