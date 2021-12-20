@@ -115,6 +115,7 @@
                 setInterval(timeCoin);
                 isStart = true;
                 isKeydown = false;//避免開始時滑走
+                isFlyKeydown = false;//避免開始時滑走
                 createjs.Ticker.addEventListener("tick", tickFn);
                 window.addEventListener("keydown", keydownMoveFn);
                 window.addEventListener("keyup", keyupMoveFn);
