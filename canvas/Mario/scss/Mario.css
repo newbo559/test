@@ -10,8 +10,21 @@
   height: 100%;
   width: 100%;
   background-color: blanchedalmond;
-  padding: 75px 0px 80px 0px;
+  padding: 0px 0px 95px 0px;
   display: flex;
+}
+.header{
+  width: 100%;
+  height: 60px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #acffdc;
+  background: rgb(59, 143, 238);
+  font-size: 30px;
+  font-weight: 800;
+
 }
 
 .box1 {
@@ -166,9 +179,9 @@ align-items: center;
 }
 .box3 h1{
   position: relative;
-  top: 25%;
-  color: #77777769;
-  text-shadow: 1px 1px 0px rgb(255, 255, 255);
+  top: 15%;
+  color: #acffdc;
+  text-shadow: 1px 1px 0px rgba(80, 68, 68, 0.726);
   text-align: center;
 }
 .box3  li{
@@ -181,14 +194,15 @@ align-items: center;
 }
 li .easy , li .medium,li .hard,li .special{
   position: relative;
-  border: 3px solid rgb(236, 151, 122);
+  border: 3px solid rgb(179, 255, 202);
   border-radius: 30px;
-  background: rgb(255, 48, 128);
-  transition: 0.15s;
+  background: rgb(62, 136, 185);
+  transition: 0.25s;
 }
 li .easy:hover , li .medium:hover,li .hard:hover, li .special:hover{
   background: rgb(15, 16, 20);
-  color: rgb(255, 255, 137,0.2);
+  color: rgb(175, 208, 247);
+  border:3px solid #fff;
 }
 
 /* #animation_container:focus,#canvas:focus{
@@ -198,6 +212,7 @@ li .easy:hover , li .medium:hover,li .hard:hover, li .special:hover{
 
   .container{
     flex-direction: column;
+    width: 700px;
   }
   .box1{
     flex-direction: column;
@@ -205,13 +220,80 @@ li .easy:hover , li .medium:hover,li .hard:hover, li .special:hover{
     height: 150px;
   }
   .box3{
-    width: 100%;
-    height: 250px;
+    width: 700px;
+    height: 350px;
     top: 0;
   }
   .box3 h1{
     top: 10%;
   }
+  .footer{
+    width: 700px;
+  }
 
 }
+
+
+/* .cube{
+  /* display: none; 
+  position: relative;
+  left: 20px;
+  width: 30px;
+  height: 30px;
+  transform-style: preserve-3d;
+  animation: animate 4s linear infinite ;
+  z-index: 100;
+} 
+
+@keyframes animate {
+  0%{
+      transform: rotateX(-30deg) rotateY(0deg);
+  }
+  100%{
+      transform: rotateX(-30deg) rotateY(360deg) ;
+  }
+
+}
+.cube div{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+.cube div span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:linear-gradient(rgb(0, 0, 0) ,rgb(4, 193, 250)) ;
+  transform: rotateY(calc(90deg * var(--i))) translateZ(15px);
+}
+.top
+{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  background: rgb(32, 32, 32);
+  transform: rotateX(90deg) translateZ(15px);
+}
+.top::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  background: rgb(4, 193, 250);
+  transform:rotateX(180deg) translateZ(-30px);
+  filter: blur(3px);
+  box-shadow: 0px 0px 12px rgba(255, 0, 0, 0.3),
+  0 0 20px rgb(4, 193, 250,0.3),
+  0 0 30px rgb(4, 193, 250,0.7),
+  0 0 40px rgb(4, 193, 250,0.1);
+} */
 /*# sourceMappingURL=Mario.css.map */
