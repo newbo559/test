@@ -133,7 +133,7 @@
                 let Coin = new lib.Coin();
 
                 if (difficulty == 1) {
-                    Coin = new lib.Knife();
+                    Coin = new lib.Knife2_Plus();
                 }
                 if (difficulty == 3) {
                     Coin = new lib.Dcsword();
@@ -142,7 +142,7 @@
                     Coin = new lib.MarioUser();
                 }
                 Coin.x = Math.floor(Math.random() * (670 - 30 + 1) + 10); //隨機範圍： 亂數 * (最大值 - 最小值 +1 ) + 最小值
-                Coin.y = -120;
+                Coin.y = -80;
                 exportRoot.addChildAt(Coin, 1);//eaclejs 將floor 階層推為2， Coin設為 1，背景為0
 
                 createjs.Tween.get(Coin)
